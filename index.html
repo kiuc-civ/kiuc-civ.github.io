@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KIUC — Kiberizmeklēšanas un Uzraudzības Centrs</title>
+  <meta name="description" content="KIUC — Kiberizmeklēšanas un Uzraudzības Centrs (Cyber Investigations & Vigilance). Cīņa pret kibernoziegumiem: CSAM/CP, zoodarbību, nekrofiliju un citiem noziegumiem. Sadarbība ar CERT, policiju un tiesībsargājošām iestādēm." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1220;         /* galvenais tumšais fons */
+      --bg-2:#0f172a;        /* tumši-zilais slānis */
+      --ink:#e5e7eb;         /* teksts uz tumša */
+      --muted:#94a3b8;       /* sekundārais teksts */
+      --brand:#2dd4bf;       /* akcents (teal) */
+      --brand-2:#60a5fa;     /* akcents (zils) */
+      --danger:#ef4444;      /* brīdinājumiem */
+      --ok:#22c55e;          /* veiksmēm */
+      --card:#111827cc;      /* kartes fons ar caurspīdību */
+      --border:#1f2937;      /* apmales */
+      --shadow: 0 10px 30px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{
+      margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); background:radial-gradient(1000px 600px at 10% -10%, #1e293b, transparent), radial-gradient(800px 500px at 90% -20%, #0ea5e9, transparent), var(--bg);
+      line-height:1.6; overflow-x:hidden;
+    }
+    a{color:inherit; text-decoration:none}
+    .container{max-width:1200px; margin:0 auto; padding:0 20px}
+    header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(1.2) blur(8px); background:linear-gradient(180deg, rgba(11,18,32,.85), rgba(11,18,32,.55)); border-bottom:1px solid var(--border)}
+    .topbar{display:flex; align-items:center; justify-content:space-between; padding:14px 0}
+    .brand{display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.4px}
+    .brand .logo{width:36px; height:36px; display:grid; place-items:center; border-radius:50%; background:conic-gradient(from 180deg at 50% 50%, var(--brand), var(--brand-2)); box-shadow:0 0 0 3px rgba(96,165,250,.15)}
+    .brand .logo svg{width:22px; height:22px; fill:#00111b}
+    nav ul{display:flex; align-items:center; gap:18px; list-style:none; margin:0; padding:0}
+    nav a{padding:8px 12px; border-radius:10px; color:var(--muted)}
+    nav a:hover{background:#0b1220; color:var(--ink)}
+    .cta{display:flex; gap:10px; align-items:center}
+    .btn{padding:10px 14px; border-radius:12px; font-weight:600; border:1px solid var(--border); background:linear-gradient(180deg,#0f172a,#0b1220); color:var(--ink); box-shadow:var(--shadow)}
+    .btn:hover{transform:translateY(-1px); transition:transform .15s ease}
+    .btn.primary{background:linear-gradient(180deg, #22d3ee, #2563eb); border-color:#1d4ed8; color:#061229}
+    .btn.alert{background:linear-gradient(180deg, #fca5a5, #ef4444); border-color:#b91c1c; color:white}
+
+    /* HERO */
+    .hero{position:relative; overflow:hidden;}
+    .hero-inner{display:grid; grid-template-columns:1.2fr 1fr; gap:36px; padding:64px 0 40px}
+    .badge{display:inline-flex; gap:8px; align-items:center; background:#0b1220; border:1px solid var(--border); color:var(--muted); padding:6px 10px; border-radius:999px; font-size:12px}
+    .title{font-size:44px; line-height:1.15; margin:18px 0 12px; font-weight:800}
+    .subtitle{color:var(--muted); font-size:18px}
+    .hero-actions{display:flex; gap:12px; margin-top:20px; flex-wrap:wrap}
+    .statbar{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:30px}
+    .stat{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px 16px}
+    .stat b{font-size:22px}
+    .glow{position:absolute; inset:-30% -10% auto auto; width:600px; height:600px; filter:blur(70px); background:radial-gradient(closest-side, rgba(34,211,238,.35), transparent), radial-gradient(closest-side, rgba(96,165,250,.35), transparent)}
+
+    /* CARDS */
+    .section{padding:56px 0}
+    .section h2{font-size:28px; margin:0 0 12px}
+    .section p.lead{color:var(--muted); margin:0 0 24px}
+    .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+    .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
+    .card h3{margin:0 0 8px; font-size:18px}
+    .icon{width:40px; height:40px; display:grid; place-items:center; border-radius:10px; background:linear-gradient(180deg, rgba(96,165,250,.25), rgba(34,211,238,.2)); margin-bottom:10px}
+    .icon svg{width:22px; height:22px; fill:var(--brand)}
+
+    /* PARTNER STRIP */
+    .partners{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; align-items:center}
+    .partner{height:52px; border-radius:14px; background:linear-gradient(180deg,#0b1220,#0f172a); border:1px dashed var(--border); display:grid; place-items:center; color:var(--muted); font-weight:600}
+
+    /* REPORT */
+    .report{display:grid; grid-template-columns:1.2fr 1fr; gap:18px}
+    .notice{border-left:4px solid var(--danger); background:linear-gradient(180deg, rgba(239,68,68,.15), rgba(15,23,42,.15)); padding:12px 14px; border-radius:12px}
+    form{display:grid; gap:12px}
+    label{font-size:14px; color:var(--muted)}
+    input, select, textarea{width:100%; padding:12px 14px; border-radius:12px; background:#0b1220; border:1px solid var(--border); color:var(--ink)}
+    textarea{min-height:140px; resize:vertical}
+    .help{font-size:12px; color:var(--muted)}
+
+    /* FOOTER */
+    footer{margin-top:40px; border-top:1px solid var(--border); background:#0b1220}
+    .footer-grid{display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:18px; padding:28px 0}
+    .mini{font-size:13px; color:var(--muted)}
+    .copyright{border-top:1px solid var(--border); color:var(--muted); font-size:12px; padding:14px 0 22px}
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px){
+      .hero-inner{grid-template-columns:1fr; padding:40px 0}
+      .report{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr 1fr}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .partners{grid-template-columns:repeat(3,1fr)}
+    }
+    @media (max-width: 640px){
+      .grid{grid-template-columns:1fr}
+      .partners{grid-template-columns:repeat(2,1fr)}
+      nav ul{display:none}
+      .title{font-size:36px}
+    }
+  </style>
+</head>
+<body>
+  <!-- ====== HEADER ====== -->
+  <header>
+    <div class="container topbar">
+      <a class="brand" href="#">
+        <span>KIUC</span>
+      </a>
+      <nav aria-label="Galvenā navigācija">
+        <ul>
+          <li><a href="#mission">Par mums</a></li>
+          <li><a href="#units">Vienības</a></li>
+          <li><a href="#report">Ziņot</a></li>
+          <li><a href="#partners">Partneri</a></li>
+          <li><a href="#contact">Kontakti</a></li>
+        </ul>
+      </nav>
+      <div class="cta">
+        <a class="btn" href="#lang">LV / EN / RU</a>
+        <a class="btn primary" href="#report">Ziņot par pārkāpumu</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====== HERO ====== -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div>
+        <span class="badge">KIBERIZMEKLĒŠANAS UN UZRAUDZĪBAS CENTRS</span>
+        <h1 class="title">Digitālās telpas drošība. <br/>Profesionāla cīņa pret kibernoziegumiem.</h1>
+        <p class="subtitle">KIUC veic izmeklēšanu un analītiku, lai atklātu un novērstu smagus kibernoziegumus, tostarp <strong>CSAM/CP</strong> (bērnu seksuālās izmantošanas materiālus), kā arī cīņā pret <strong>zoodarbību</strong>, <strong>nekrofiliju</strong> un citiem noziegumiem. Mēs sadarbojamies ar CERT, policiju un citām tiesībsargājošām iestādēm, cienot cilvēktiesības un likumu.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#report">Ziņot anonīmi</a>
+          <a class="btn" href="#mission">Uzzināt vairāk</a>
+        </div>
+        <div class="statbar" aria-label="Galvenie rādītāji">
+          <div class="stat"><b>24/7</b><br><span class="mini">Reakcija un uzraudzība</span></div>
+          <div class="stat"><b>ISO</b><br><span class="mini">Privātuma un drošības principi</span></div>
+          <div class="stat"><b>100%</b><br><span class="mini">Sadarbība ar iestādēm</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="card" role="img" aria-label="Drošības pārskats">
+          <h3>Operatīvais pārskats</h3>
+          <p class="mini">Reāllaika vērtējums par ziņojumiem un riskiem.</p>
+          <div class="mini" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px">
+            <div class="card" style="padding:12px"><b>Aktīvie ziņojumi</b><br><span class="mini">—</span></div>
+            <div class="card" style="padding:12px"><b>Kritiskie incidenti</b><br><span class="mini">—</span></div>
+            <div class="card" style="padding:12px"><b>Nosūtīts iestādēm</b><br><span class="mini">—</span></div>
+            <div class="card" style="padding:12px"><b>Aizsargātie bērni</b><br><span class="mini">—</span></div>
+          </div>
+          <p class="help" style="margin-top:10px">* Publiskajā versijā reālie skaitļi netiek rādīti drošības nolūkos.</p>
+        </div>
+      </div>
+    </div>
+    <div class="glow" aria-hidden="true"></div>
+  </section>
+
+  <!-- ====== MISSION ====== -->
+  <section id="mission" class="section">
+    <div class="container">
+      <h2>Mūsu misija</h2>
+      <p class="lead">Nodrošināt drošu un likumīgu digitālo vidi, identificējot, fiksējot un nododot kompetentajām iestādēm informāciju par smagiem kibernoziegumiem. Mēs strādājam saskaņā ar Latvijas un starptautisko tiesību aktiem, NILLTPFN un datu aizsardzības prasībām.</p>
+      <div class="grid">
+        <article class="card">
+          <div class="icon"> 
+            <svg viewBox="0 0 24 24"><path d="M12 2l7 4v6c0 5-3.5 9-7 10-3.5-1-7-5-7-10V6l7-4zm0 6a3 3 0 100 6 3 3 0 000-6z"/></svg>
+          </div>
+          <h3>Izmeklēšana & OSINT</h3>
+          <p>Strukturēta atklātās un slēgtās informācijas vākšana (OSINT), digitālo pēdu analīze, pierādījumu fiksēšana un saglabāšana saskaņā ar procesuālajām prasībām.</p>
+        </article>
+        <article class="card">
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><path d="M4 7h16v10H4V7zm2 2v6h12V9H6zm7-6h-2v3h2V3z"/></svg>
+          </div>
+          <h3>Aizsardzība & Prevencija</h3>
+          <p>Profilaktiski pasākumi, riska komunikācija un atbalsts kopienām, lai mazinātu kaitējumu un stiprinātu digitālo higiēnu bērniem un pieaugušajiem.</p>
+        </article>
+        <article class="card">
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5zm0 12l9 5-9 5-9-5 9-5z"/></svg>
+          </div>
+          <h3>Sadarbība ar iestādēm</h3>
+          <p>Koordinācija ar CERT, Valsts policiju, prokuratūru un starptautiskajiem partneriem. Operatīva materiālu nodošana un ziņojumu kvalifikācija.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== UNITS ====== -->
+  <section id="units" class="section" style="background:linear-gradient(180deg,#0b1220,#0f172a)">
+    <div class="container">
+      <h2>Specializētās vienības</h2>
+      <p class="lead">Strukturēta pieeja ļauj ātri reaģēt un nodrošināt pierādījumu kvalitāti.</p>
+      <div class="grid">
+        <article class="card">
+          <h3>KiUC • OSINT & Kiberizmeklēšana</h3>
+          <p>Darbs ar atvērtajiem avotiem, Tīmekļa un Tumšā tīkla analīze, profilu un infrastruktūras saistību kartēšana.</p>
+        </article>
+        <article class="card">
+          <h3>Digitālās pierādījumu pārvaldība</h3>
+          <p>Hash, ķēdes integritāte (chain of custody), droša glabāšana un nodošana iestādēm. Datu minimizācijas princips.</p>
+        </article>
+        <article class="card">
+          <h3>Upuru atbalsts un nodošana</h3>
+          <p>Koordinācija ar sociālajiem dienestiem, Bērnu tiesību aizsardzības iestādēm un NVO, informētas piekrišanas ievērošana.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PARTNERS ====== -->
+  <section id="partners" class="section">
+    <div class="container">
+      <h2>Partneri un sadarbība</h2>
+      <p class="lead">Mēs sadarbojamies ar valsts un starptautiskajām iestādēm. Zemāk — vietturi Jūsu partneru logotipiem.</p>
+      <div class="partners">
+        <div class="partner">CERT</div>
+        <div class="partner">Valsts policija</div>
+        <div class="partner">Prokuratūra</div>
+        <div class="partner">Interpol/Europol</div>
+        <div class="partner">NVO</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== REPORT ====== -->
+  <section id="report" class="section" style="background:linear-gradient(180deg,#0f172a,#0b1220)">
+    <div class="container report">
+      <div>
+        <h2>Ziņot par pārkāpumu</h2>
+        <p class="lead">Ja jūsu rīcībā ir informācija par CSAM/CP, zoodarbību, nekrofiliju vai citiem kibernoziegumiem, lūdzu, nekavējoties ziņojiet. <strong>Nepārskatiet vai neizplatiet materiālus</strong>. Iesniedziet tikai aprakstu un saites, ja tādas ir.</p>
+        <div class="notice" role="alert">
+          <strong>Brīdinājums:</strong> Nelegāla satura glabāšana un izplatīšana ir noziegums. Ielādējiet tikai metadatus (piem., URL), nevis failus.
+        </div>
+        <form aria-label="Ziņošanas forma" onsubmit="event.preventDefault(); alert('Paldies! Jūsu ziņojums ir saņemts. Mēs sazināsimies, ja būs nepieciešama papildu informācija.'); this.reset();">
+          <div>
+            <label for="type">Notikuma veids <span class="help">(piem., CSAM/CP, zoodarbība, nekrofilija, krāpšana u.c.)</span></label>
+            <select id="type" required>
+              <option value="">— izvēlieties —</option>
+              <option>CSAM/CP (bērnu seksuālās izmantošanas materiāli)</option>
+              <option>Zoodarbība</option>
+              <option>Nekrofilija</option>
+              <option>Krāpšana/izspiešana</option>
+              <option>Cits kibernoziegums</option>
+            </select>
+          </div>
+          <div>
+            <label for="desc">Apraksts</label>
+            <textarea id="desc" placeholder="Aprakstiet notikumu, platformu, lietotājvārdus, laika posmu, iespējamos cietušos u.c." required></textarea>
+          </div>
+          <div>
+            <label for="links">Saite(s) / metadati</label>
+            <input id="links" type="url" placeholder="https://… (ja ir vairākas, ierakstiet ar atstarpi vai semikolu)" />
+            <p class="help">Neaugšupielādējiet failus. Norādiet tikai URL vai citus metadatus.</p>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+            <div>
+              <label for="contact">Kontakts (neobligāti)</label>
+              <input id="contact" type="email" placeholder="vards@domain.lv" />
+              <p class="help">Ja vēlaties saņemt atbildi. Varat ziņot anonīmi.</p>
+            </div>
+            <div>
+              <label for="jur">Valsts/juridiskā jurisdikcija</label>
+              <input id="jur" type="text" placeholder="Latvija / ES / cits" />
+            </div>
+          </div>
+          <div>
+            <button class="btn alert" type="submit">Nosūtīt ziņojumu droši</button>
+          </div>
+        </form>
+      </div>
+      <aside class="card">
+        <h3>Datu aizsardzība</h3>
+        <p class="mini">Mēs ievērojam GDPR un datu minimizācijas principu. Visi ziņojumi tiek šifrēti transportā; piekļuve — tikai pilnvarotām personām.</p>
+        <hr style="border-color:var(--border); opacity:.4" />
+        <h3>Nekavējoties izsauciet palīdzību, ja:</h3>
+        <ul class="mini">
+          <li>pastāv tūlītēji draudi bērnam vai pilngadīgai personai;</li>
+          <li>novērojat notiekošu vardarbību tiešraidē;</li>
+          <li>ir zināma precīza atrašanās vieta vai identitāte.</li>
+        </ul>
+        <p class="mini">Zvaniet 112 vai tuvākajai policijai. Mēs sadarbojamies ar iestādēm un varam palīdzēt koordinēt informāciju.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ====== CONTACT ====== -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2>Kontakti</h2>
+      <p class="lead">Jautājumiem par sadarbību, medijiem vai juridiskiem jautājumiem sazinieties ar mums.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Vispārīgie kontakti</h3>
+          <p class="mini">E-pasts: info@kiuc.example • Preses: press@kiuc.example</p>
+          <p class="mini">Juridiskā adrese: Rīga, Latvija (piemērs)</p>
+        </div>
+        <div class="card">
+          <h3>Sadarbība ar iestādēm</h3>
+          <p class="mini">Drošais kanāls iestādēm: secure@kiuc.example (PGP)</p>
+          <p class="mini">Pieprasot sadarbību, norādiet juridisko pamatu un kontaktpersonu.</p>
+        </div>
+        <div class="card">
+          <h3>Ziņotājam</h3>
+          <p class="mini">Ja vēlaties sekot savam ziņojumam, lūdzu, saglabājiet atsauces ID, ko saņemsiet pēc iesniegšanas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <div class="brand" style="margin-bottom:8px">
+          <span class="logo"><svg viewBox="0 0 24 24"><path d="M4 11c2-5 7-9 14-8-2 2-2 4-1 6 2 4-3 8-7 7-1 4-4 6-6 6 2-3 2-6 0-11zM18 5c-1 .5-2 1.4-2.2 2.1.6.5 1.6.6 2.3.1.7-.5.9-1.5-.1-2.2z"/></svg></span>
+          <strong>KIUC</strong>
+        </div>
+        <p class="mini">© <span id="year"></span> Kiberizmeklēšanas un Uzraudzības Centrs. Visas tiesības aizsargātas. Darbība notiek saskaņā ar piemērojamiem tiesību aktiem un sadarbībā ar kompetentajām iestādēm.</p>
+      </div>
+      <div>
+        <h4 style="margin:0 0 8px">Resursi</h4>
+        <ul class="mini">
+          <li><a href="#mission">Misija</a></li>
+          <li><a href="#units">Vienības</a></li>
+          <li><a href="#report">Ziņošanas forma</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="margin:0 0 8px">Juridiskā informācija</h4>
+        <ul class="mini">
+          <li>Privātuma politika</li>
+          <li>Lietošanas noteikumi</li>
+          <li>Ētikas kodekss</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="margin:0 0 8px">Drošība</h4>
+        <ul class="mini">
+          <li>Atbildīgas atklāšanas principi</li>
+          <li>Šifrēšanas atslēgas</li>
+          <li>Incidentu atskaites</li>
+        </ul>
+      </div>
+    </div>
+    <div class="container copyright">Izstrādāts sabiedriskā labuma mērķiem. Aizliegta jebkāda nelegāla materiālu glabāšana vai izplatīšana.</div>
+  </footer>
+
+  <script>
+    // Gads kājā
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
